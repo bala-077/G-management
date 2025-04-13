@@ -80,10 +80,23 @@ const GrievanceStatus = () => {
   // Add categories array
   const categories = ['All', 'Education', 'Health Ministry', 'Service Provider', 'Others'];
   
-  // Filter grievances based on selected category
-  const filteredGrievances = selectedCategory === 'All' 
-    ? grievances 
-    : grievances.filter(g => g.dept === selectedCategory);
+  // Add status filter state and options
+  const [selectedStatus, setSelectedStatus] = useState('Not seen');
+  const statusOptions = ['Not seen', 'In Process', 'Referred to concerned Authority', 'Closed'];
+  
+  // Update the filtering logic to include both category and status
+  // Add sort state
+  const [sortOrder, setSortOrder] = useState('desc'); // 'desc' for newest first
+  
+  // Update the filtering and sorting logic
+  const filteredGrievances = grievances
+    .filter(g => selectedCategory === 'All' || g.dept === selectedCategory)
+    .filter(g => selectedStatus === 'All' || g.status === selectedStatus)
+    .sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    });
   
   // Update pagination calculations to use filtered grievances
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -96,25 +109,55 @@ const GrievanceStatus = () => {
       <div className="container mt-4">
         <h2 className="text-center mb-3">Grievance Status</h2>
 
-        {/* Category Filter */}
+        {/* Add sort order toggle */}
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
+            className="px-3 py-1 border rounded flex items-center gap-1"
+          >
+            Date {sortOrder === 'desc' ? '↓' : '↑'}
+          </button>
+        </div>
+
+        {/* Filters Section */}
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-4">
-            <label className="font-medium">Category:</label>
-            <select
-              className="px-3 py-2 border rounded"
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value);
-                setCurrentPage(1);
-              }}
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
-            </select>
+            {/* Category Filter */}
+            <div className="flex items-center gap-2">
+              <label className="font-medium">Category:</label>
+              <select
+                className="px-3 py-2 border rounded"
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setCurrentPage(1);
+                }}
+              >
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Status Filter */}
+            <div className="flex items-center gap-2">
+              <label className="font-medium">Status:</label>
+              <select
+                className="px-3 py-2 border rounded"
+                value={selectedStatus}
+                onChange={(e) => {
+                  setSelectedStatus(e.target.value);
+                  setCurrentPage(1);
+                }}
+              >
+                {statusOptions.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Existing items per page select */}
+          {/* Items per page select */}
           <select
             className="px-3 py-2 border rounded"
             value={itemsPerPage}
@@ -130,9 +173,11 @@ const GrievanceStatus = () => {
           </select>
         </div>
 
+        {/* Update the entries info text */}
         <div className="text-sm text-gray-600 mb-4">
           Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, filteredGrievances.length)} of {filteredGrievances.length} entries
           {selectedCategory !== 'All' && ` in ${selectedCategory}`}
+          {selectedStatus !== 'All' && ` with status "${selectedStatus}"`}
         </div>
 
         {/* Pagination Controls */}
