@@ -7,6 +7,7 @@ const Grievance = () => {
     phone: "",
     dept: "",
     grievance: "",
+    file: null
   });
 
   const [loading, setLoading] = useState(true);
@@ -52,37 +53,53 @@ const Grievance = () => {
     setUserData({ ...userData, [name]: value });
   };
 
+  // Handle file input
+  const handleFileChange = (event) => {
+    setUserData({ ...userData, file: event.target.files[0] });
+  };
+
   // Submit grievance
-  const fileGrievance = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { name, email, phone, dept, grievance } = userData;
+    const { name, email, phone, dept, grievance, file } = userData;
 
     if (!dept || !grievance) {
       alert("Please fill all required fields!");
       return;
     }
 
-    const res = await fetch("/grievance", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, phone, dept, grievance }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {  // Add proper error checking
-      alert(data.error || "Error submitting grievance");
-      return;
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('email', email);
+    formData.append('phone', phone);
+    formData.append('dept', dept);
+    formData.append('grievance', grievance);
+    if (file) {
+      formData.append('file', file);
     }
 
-    if (!data) {
-      alert("Error submitting grievance. Try again!");
-    } else {
+    try {
+      const res = await fetch("/grievance", {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.error || "Error submitting grievance");
+        return;
+      }
+
       alert("Grievance Filed Successfully! We'll inform you when there's a response.");
-      setUserData({ ...userData, dept: "", grievance: "" });
+      setUserData({ ...userData, dept: "", grievance: "", file: null });
+      // Reset file input
+      document.getElementById('fileInput').value = '';
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error submitting grievance');
     }
   };
 
@@ -96,7 +113,7 @@ const Grievance = () => {
         {loading ? (
           <p className="text-center text-gray-600">Loading...</p>
         ) : (
-          <form method="POST" className="space-y-6">
+          <form method="POST" className="space-y-6" onSubmit={handleSubmit}>
             {/* Name, Email, Phone Row */}
             <div className="grid grid-cols-3 gap-4">
               <div>
@@ -168,8 +185,10 @@ const Grievance = () => {
               <input
                 type="file"
                 className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200"
-                id="myFile"
-                name="filename"
+                id="fileInput"
+                name="file"
+                onChange={handleFileChange}
+                accept="image/*,.pdf,.doc,.docx"
               />
             </div>
 
@@ -177,7 +196,6 @@ const Grievance = () => {
             <div className="text-center">
               <button
                 type="submit"
-                onClick={fileGrievance}
                 className="px-8 py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors"
               >
                 Submit Grievance

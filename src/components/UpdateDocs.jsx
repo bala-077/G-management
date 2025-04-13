@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Footer from "./Footer";
 
 const UpdateDocs = () => {
   const [gId, setGId] = useState("");
@@ -196,7 +195,6 @@ const UpdateDocs = () => {
         </div>
       </div>
 
-      <Footer />
     </>
   );
 };
