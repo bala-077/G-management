@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,100;1,400;1,700&display=swap');
+
+*{
+  font-family: 'Roboto', sans-serif;
+}
+table, th, tr, td {
+  padding: 5px;
+  border: 1px solid black;
+}
+.Gtable{
+  margin: 2%;
+}
+.hide{
+  visibility: hidden;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#root, .app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;  /* Full height of the viewport */
+}
+
+.content {
+  flex: 1;  /* Pushes footer to bottom */
+}
+
+.footer {
+  background-color: #343a40; /* Dark background */
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.signup {
+  background: #f8f9fa;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+}
+
+.card h2 {
+  font-weight: 600;
+}
+
+.login-image-link {
+  font-weight: bold;
+  text-decoration: none;
+  color: #007bff;
+}
+
+.login-image-link:hover {
+  text-decoration: underline;
+}
+
+.btn-primary {
+  background: #007bff;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.form-floating {
+  margin-bottom: 12px; /* Reduce the space between input fields */
+}
+
+.form-control {
+  padding: 8px 12px; /* Adjust padding for a compact look */
+  font-size: 14px;
+}
+
+.btn-lg {
+  padding: 10px 0; /* Adjust button size */
+}
+
+
+
+
+.signup {
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: black;
+}
+
+.glassmorphic-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+
+
+
+
+
+.btn-primary {
+  background: linear-gradient(135deg, #007bff, #00c6ff);
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0056b3, #0094ff);
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 15px rgba(0, 194, 255, 0.5);
+}
+
+
+.signup-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
